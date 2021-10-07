@@ -67,12 +67,40 @@ void ADS122u04::resetDevice()
 	Serial2.write(0b01001000); // reg value
 }
 
+void ADS122u04::readData()
+{
+	PcInt::attachInterrupt(ADS_DRDY_PIN, dataInterrupt, inputBuff, RISING, false);
+	sendRDATA();
+	unsigned long time = millis();
+	while (!isDataReady())
+	{
+		if (millis() - time > DATA_READ_TIMEOUT)
+		{
+			Serial.println("Data Read timeout");
+			return;
+		}
+		delay(1);
+	}
+}
+
+bool ADS122u04::isDataReady()
+{
+	return digitalRead(ADS_DRDY_PIN);
+}
+
 void ADS122u04::init()
 {
+	pinMode(ADS_DRDY_PIN, INPUT);
 	Serial2.begin(19200);
+	resetDevice();
 
 }
 
 
 ADS122u04 ;
 
+void dataInterrupt(char* buff)
+{
+	Serial2.readBytes(buff, 3);
+	PcInt::detachInterrupt(ADS_DRDY_PIN);
+}

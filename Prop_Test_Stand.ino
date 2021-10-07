@@ -8,8 +8,12 @@
 
 // Define User Types below here or use a .h file
 //
+
+#include <YetAnotherPcInt.h>
+#include <PinChangeInterruptBoards.h>
 #include <LiquidCrystal.h>
 #include <Servo.h>
+#include "ADS122u04.h"
 
 
 

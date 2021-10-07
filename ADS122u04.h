@@ -8,35 +8,44 @@
 #else
 	#include "WProgram.h"
 #endif
+#include <YetAnotherPcInt.h>
+#include <PinChangeInterruptBoards.h>
 
 //	Pins
 #define ADS_DRDY_PIN 50
 
-// Communication
+//	Communication
 #define ADS_SYNC_HEAD			0x55
+#define DATA_READ_TIMEOUT 100 // ms
 //	Commands
 #define ADS_RESET_CMD			0x06 // 0b00000110
 #define ADS_START_SYNC_CMD		0x08 // 0b00001001
 #define ADS_POWERDOWN_CMD		0x03 // 0b00000010
 #define ADS_RDATA_CMD			0x10 // 0b00010000
-//#define ADS_RREG_CMD 0b0010 //RRRX next register and last do not matters
-//#define ADS_WREG_CMD 0b0100 //RRRXnext register and last do not matters
+
+//	Parameters
+#define ADS_GAIN 1;
+#define ADS_VREF 5;
 
 
+
+void dataInterrupt(char* buff);
 
 class ADS122u04
 {
  protected:
+	 char inputBuff[3];
+
 	 void sendReset();
 	 void sendStartSync();
 	 void sendPowerdown();
 	 void sendRDATA();
 	 void resetDevice();
-	 void setRegisters();
-
+	 void readData();
+	 bool isDataReady();
  public:
 	void init();
-	double readSingleRAW();
+
 
 };
 
