@@ -24,8 +24,8 @@
 #define ADS_RDATA_CMD			0x10 // 0b00010000
 
 //	Parameters
-#define ADS_GAIN 1;
-#define ADS_VREF 5;
+#define ADS_GAIN 128
+#define ADS_VREF 5.0f
 
 
 
@@ -35,14 +35,17 @@ class ADS122u04
 {
  protected:
 	 char inputBuff[3];
+	 int inputNum;
 
 	 void sendReset();
 	 void sendStartSync();
 	 void sendPowerdown();
 	 void sendRDATA();
 	 void resetDevice();
-	 void readData();
+	 void sendSetInput(int inputNum);
+	 bool readData();
 	 bool isDataReady();
+	 float convertData();
  public:
 	void init();
 
