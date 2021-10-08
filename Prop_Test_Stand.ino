@@ -23,17 +23,19 @@
 
 // Define Functions below here or use other .ino or cpp files
 //
+ADS122u04 ads;
 
 // The setup() function runs once each time the micro-controller starts
 void setup()
 {
     Serial.begin(19200);
-
+    ads.init();
 }
 
 // Add the main program code into the continuous loop() function
 void loop()
 {
-
+    Serial.println(ads.getInputVoltage(0), 9);
+    delay(500);
 
 }

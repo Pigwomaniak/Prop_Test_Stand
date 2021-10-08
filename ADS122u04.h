@@ -16,7 +16,7 @@
 
 //	Communication
 #define ADS_SYNC_HEAD			0x55
-#define DATA_READ_TIMEOUT 100 // ms
+#define DATA_READ_TIMEOUT 1000 // ms
 //	Commands
 #define ADS_RESET_CMD			0x06 // 0b00000110
 #define ADS_START_SYNC_CMD		0x08 // 0b00001001
@@ -48,7 +48,7 @@ class ADS122u04
 	 float convertData();
  public:
 	void init();
-
+	float getInputVoltage(int input);
 
 };
 

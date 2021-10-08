@@ -35,7 +35,7 @@ void ADS122u04::resetDevice()
 	// Set data rate
 	sendReset();
 	/*
-	REGISTER 0: 7 : 4 Input multiplexer(0000 : AINP = AIN0, AINN = AIN1); 3:1 gains(000 : Gain = 128); 0 disable PGA bypas(0 : PGA enabled(default))
+	REGISTER 0: 7 : 4 Input multiplexer(0000 : AINP = AIN0, AINN = AIN1); 3:1 gains(111 : Gain = 128); 0 disable PGA bypas(0 : PGA enabled(default))
 	*/
 	Serial2.write(ADS_SYNC_HEAD);
 	Serial2.write(0b00100000); // reg number
@@ -101,7 +101,7 @@ bool ADS122u04::readData()
 
 bool ADS122u04::isDataReady()
 {
-	return digitalRead(ADS_DRDY_PIN);
+	return !digitalRead(ADS_DRDY_PIN);
 }
 
 float ADS122u04::convertData()
@@ -110,10 +110,12 @@ float ADS122u04::convertData()
 	{
 		return 0.0f;
 	}
+	Serial.print(inputBuff[0]);
+	Serial.print(inputBuff[1]);
+	Serial.println(inputBuff[2]);
 	unsigned long rawData = 0;
 	rawData = ((((rawData + inputBuff[0]) << 8) + inputBuff[1]) << 8) + inputBuff[2];
 	float lsb = (2 * ADS_VREF / ADS_GAIN) / pow(2,23);
-
 	return (lsb * rawData);
 }
 
@@ -124,6 +126,12 @@ void ADS122u04::init()
 	resetDevice();
 	inputNum = 0;
 
+}
+
+float ADS122u04::getInputVoltage(int input)
+{
+	sendSetInput(input);
+	return convertData();
 }
 
 
